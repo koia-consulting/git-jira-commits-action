@@ -12,8 +12,8 @@ function formatIssueInfo(issue,jiraHost) {
     if(issue.author != ''){
         authorText = `Author: ${issue.author},`;
     }
-    
-    case(issue.levelType){
+
+    switch (issue.levelType){
         case(LEVEL_PARENT):
             return `${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
         case(LEVEL_RELATED):
