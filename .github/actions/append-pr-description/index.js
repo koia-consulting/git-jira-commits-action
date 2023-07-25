@@ -22,32 +22,22 @@ async function run() {
             pull_number: issue_number
         });
 
+        const commentsResponse = await octokit.rest.issues.listComments({
+            owner: repo.owner,
+            repo: repo.repo,
+            issue_number: pullRequest.number,
+        });
+
+        for(let comment of commentsResponse.data){
+            core.notice(comment);
+        }
+
         const markerStart = '### JIRA Tickets in PR \n';
         const markerEnd = '\n';
-
-        // let body = pullRequest.body;
-        // if (body === null) {
-        //     body = '';
-        // }
-        // else {
-        //     body += removeSpecificText(pullRequest.body, markerStart, markerEnd);
-        // }
-
-        // body += markerStart;
-        // body += issuesInfo;
-        // body += markerEnd;
-
-        // await octokit.pulls.update({
-        //     owner: repo.owner,
-        //     repo: repo.repo,
-        //     pull_number: issue_number,
-        //     body: body
-        // });
 
         let comment = markerStart;
         comment += issuesInfo;
         comment += markerEnd;
-
 
         await octokit.rest.issues.createComment({
             owner: repo.owner,
