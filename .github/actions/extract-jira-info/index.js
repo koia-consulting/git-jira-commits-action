@@ -2,15 +2,15 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('cross-fetch');
 
-function formatIssueInfo(issue) {
-    const issueLink = `<a href="https://${process.env.JIRA_HOST}/browse/${issue.key}">${issue.key}</a>`;
+function formatIssueInfo(issue,jiraHost) {
+    const issueLink = `<a href=https://${jiraHost}/browse/${issue.key}`>${issue.key}</a>`;
     return `${issueLink}: ${issue.summary} (Author: ${issue.author}, Status: ${issue.status})`;
 }
 
-function formatIssueList(issues){
+function formatIssueList(issues,jiraHost){
     let issueList = '';
     for (let issue of issues) {
-        issueList += `* ${formatIssueInfo(issue)}\n`;
+        issueList += `* ${formatIssueInfo(issue,jiraHost)}\n`;
     }
     return issueList;
 }
@@ -78,7 +78,7 @@ async function run() {
             });
         }
 
-        core.setOutput('jira-issues', formatIssueList(result));
+        core.setOutput('jira-issues', formatIssueList(result,jiraHost));
     } catch (error) {
         core.setFailed(error.message);
     }
