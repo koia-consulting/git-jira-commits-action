@@ -7,7 +7,6 @@ async function run() {
         const jiraToken = core.getInput('jira-token', { required: true });
         const jiraHost = core.getInput('jira-host', { required: true });
         const jiraEmail = core.getInput('jira-email', { required: true });
-        const isCloud = core.getInput('cloud');
         const jiraKeys = core.getInput('jira-keys').split(',');
 
         if (!jiraKeys.length) {
@@ -19,7 +18,7 @@ async function run() {
         const result = [];
 
         for (let jiraKey of jiraKeys) {
-            const response = await fetch(`${protocol}://${jiraHost}/rest/api/3/issue/${jiraKey}`, {
+            const response = await fetch(`${protocol}://${jiraHost}/rest/api/2/issue/${jiraKey}`, {
                 headers: {
                     'Authorization': `Basic ${Buffer.from(`${jiraEmail}:${jiraToken}`).toString('base64')}`,
                     'Accept': 'application/json'
