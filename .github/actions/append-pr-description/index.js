@@ -51,7 +51,7 @@ async function run() {
 
         await octokit.rest.issues.createComment({
             owner: repo.owner,
-            repo: repo,
+            repo: repo.repo,
             issue_number: issue_number,
             body: comment,
         });
