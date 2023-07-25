@@ -44,4 +44,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUES_INFO: ${{ steps.jira_info.outputs.jira-issues }}
-        if: github.event_name == 'pull_request' && steps.jira_keys.outputs.jira-keys != ''
