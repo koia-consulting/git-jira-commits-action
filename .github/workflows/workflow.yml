@@ -13,7 +13,7 @@ jobs:
           node-version: '14'
       - name: Run action
         id: jira_keys
-        uses: ./.github/actions/git-jira-commits-action
+        uses: ./.github/actions/extract-jira-keys
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           filter: 'all' # Can be 'pr', 'commit', 'branch', or 'all'
