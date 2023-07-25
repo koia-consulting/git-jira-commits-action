@@ -12,7 +12,7 @@ async function run() {
 
         // Extract the JIRA keys from the PR/commit/branch based on the filter value
         let jiraKeys = [];
-        const regex = /\b[A-Z0-9]{1,10}-\d+\b/gi;
+        const regex = /(?<=\/|\b)[a-z0-9]{1,10}-\d+\b/gi;
 
         // Add checks and extraction logic for PR title, commit messages, and branch name
         // This is an example for PR title:
