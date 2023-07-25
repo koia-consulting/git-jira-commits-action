@@ -23,6 +23,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           filter: 'all' # Can be 'pr', 'commit', 'branch', or 'all'
+      - name: Print JIRA keys
+        run: |
+          echo "${{ steps.jira_keys.outputs.jira-keys }}"
       - name: Run extract-jira-info action
         id: jira_info
         uses: ./.github/actions/extract-jira-info
