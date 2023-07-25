@@ -1,16 +1,3 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-
-const extractJiraKeys = (str) => {
-    const jiraKeyRegex = /\b[A-Z]{2,}-\d+\b/g;
-    const matches = str.match(jiraKeyRegex);
-    return matches || [];
-};
-
-const extractUniqueJiraKeys = (array) => {
-    return [...new Set(array)];
-};
-
 async function run() {
     try {
         const githubToken = core.getInput('github-token', { required: true });
@@ -21,12 +8,12 @@ async function run() {
 
         const { owner, repo } = context.repo;
         const { number } = context.issue;
-        const { sha } = context.sha;
 
         let prKeys = [];
         let commitKeys = [];
         let branchKeys = [];
 
+        let sha;
         if(context.eventName === 'pull_request') {
             const { data: pr } = await octokit.rest.pulls.get({
                 owner,
@@ -36,9 +23,13 @@ async function run() {
 
             prKeys.push(...extractJiraKeys(pr.title));
             branchKeys.push(...extractJiraKeys(pr.head.ref));
+
+            sha = pr.head.sha;
         } else if (context.eventName === 'push') {
             const branchName = process.env.GITHUB_REF.split('/').pop();
             branchKeys.push(...extractJiraKeys(branchName));
+
+            sha = context.sha;
         }
 
         const { data: commitData } = await octokit.rest.repos.listCommits({

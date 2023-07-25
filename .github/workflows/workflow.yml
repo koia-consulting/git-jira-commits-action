@@ -7,10 +7,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Run action
         id: jira_keys
         uses: ./.github/actions/extract-jira-keys
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          filter: 'all' # Can be 'pr', 'commit', 'branch', or 'all'
       - name: Print JIRA keys
         run: echo "JIRA keys: ${{ steps.jira_keys.outputs.jira-keys }}"
