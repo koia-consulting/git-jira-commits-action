@@ -14,7 +14,7 @@ async function run() {
             return;
         }
 
-        core.debug(`Fetching JIRA issues: ${jiraKeys.join(', ')}\n`);
+        core.notice(`Fetching JIRA issues: ${jiraKeys.join(', ')}\n`);
 
         const protocol = 'https';
         const result = [];
@@ -27,7 +27,7 @@ async function run() {
                 }
             });
 
-            core.debug(`response`, response.ok, response.status, response.statusText, response.headers.raw());
+            core.notice(`response`, response.ok, response.status, response.statusText, response.headers.raw());
             if (!response.ok) {
 
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
