@@ -2,15 +2,32 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('cross-fetch');
 
+const LEVEL_RELATED = "Related";
+const LEVEL_PARENT = "Parent";
+
 function formatIssueInfo(issue,jiraHost) {
     const issueLink = `<a href="https://${jiraHost}/browse/${issue.key}">${issue.key}</a>`;
-    return `${issueLink}: ${issue.summary} (Author: ${issue.author}, Status: ${issue.status})`;
+    let authorText = "";
+
+    if(issue.author != ''){
+        authorText = `Author: ${issue.author},`;
+    }
+    
+    case(issue.levelType){
+        case(LEVEL_PARENT):
+            return `${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
+        case(LEVEL_RELATED):
+    }       return `    >> ${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
+
 }
 
 function formatIssueList(issues,jiraHost){
     let issueList = '';
     for (let issue of issues) {
         issueList += `* ${formatIssueInfo(issue,jiraHost)}\n`;
+        if(issue.dependencies.length > 0){
+            issueList += formatIssueList(issue.dependencies,jiraHost, "");
+        }
     }
     return issueList;
 }
@@ -61,10 +78,13 @@ async function run() {
                 const linkedIssueKey = linkedIssue.outwardIssue?.key || linkedIssue.inwardIssue?.key || "No linked issue key available";
                 const linkedIssueSummary = linkedIssue.outwardIssue?.fields?.summary || linkedIssue.inwardIssue?.fields?.summary || "No linked issue summary available";
                 const linkedIssueStatus = linkedIssue.outwardIssue?.fields?.status?.name || linkedIssue.inwardIssue?.fields?.status?.name || "No linked issue status available";
+                const likedIssueRelation = linkedIssue.type?.inward || "No linked issue relation available";
                 return {
                     key: linkedIssueKey,
                     summary: linkedIssueSummary,
-                    status: linkedIssueStatus
+                    status: linkedIssueStatus,
+                    relation: likedIssueRelation,
+                    levelType: LEVEL_RELATED
                 };
             });
 
@@ -74,7 +94,8 @@ async function run() {
                 status: issueStatus,
                 author: issueAuthor,
                 description: issueDescription,
-                dependencies: dependencies
+                dependencies: dependencies,
+                levelType: LEVEL_PARENT
             });
         }
 
