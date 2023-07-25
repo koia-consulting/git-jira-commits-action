@@ -15,7 +15,7 @@ async function run() {
             return;
         }
 
-        const protocol = isCloud === 'true' ? 'https' : 'http';
+        const protocol = 'https';
         const result = [];
 
         for (let jiraKey of jiraKeys) {
