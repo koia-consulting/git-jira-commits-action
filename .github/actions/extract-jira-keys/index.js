@@ -1,3 +1,16 @@
+const core = require('@actions/core');
+const github = require('@actions/github');
+
+function extractJiraKeys(text) {
+    const jiraKeyPattern = /\b[A-Z][A-Z0-9]*-[0-9]+\b/g;
+    const result = text.match(jiraKeyPattern);
+    return result || [];
+}
+
+function extractUniqueJiraKeys(keys) {
+    return [...new Set(keys)];
+}
+
 async function run() {
     try {
         const githubToken = core.getInput('github-token', { required: true });
