@@ -15,3 +15,7 @@ This action requires Node.js to be set up in your workflow. If you don't have a 
 ## Outputs
 
 - `jira-keys`: A comma-separated list of unique JIRA keys extracted.
+
+## Example usage
+
+```yaml
