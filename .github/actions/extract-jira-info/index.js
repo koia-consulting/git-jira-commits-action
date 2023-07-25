@@ -38,8 +38,6 @@ function formatIssueInfo(issue) {
 
 function formatIssues(issues) {
     let result = '';
-    core.setFailed(issues);
-    return;
 
     issues.forEach(issue => {
         result += `- ${formatIssueInfo(issue)}\n`;
