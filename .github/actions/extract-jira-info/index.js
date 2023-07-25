@@ -2,6 +2,19 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('cross-fetch');
 
+function formatIssueInfo(issue) {
+    const issueLink = `<a href="https://${process.env.JIRA_HOST}/browse/${issue.issueKey}">${issue.issueKey}</a>`;
+    return `${issueLink}: ${issue.summary} (Author: ${issue.author}, Status: ${issue.issueStatus})`;
+}
+
+function formatIssueList(issues){
+    let issueList = '';
+    for (let issue of issues) {
+        issueList += `* ${formatIssueInfo(issue)}\n`;
+    }
+    return issueList;
+}
+
 async function run() {
     try {
         const jiraToken = core.getInput('jira-token', { required: true });
@@ -63,10 +76,9 @@ async function run() {
                 description: issueDescription,
                 dependencies: dependencies
             });
-            core.notice(result[0]);
         }
 
-        core.setOutput('jira-issues', JSON.stringify(result));
+        core.setOutput('jira-issues', formatIssueList(result));
     } catch (error) {
         core.setFailed(error.message);
     }
