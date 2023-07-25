@@ -28,12 +28,6 @@ async function run() {
                 }
             });
 
-            core.notice(url);
-            core.notice(response.status);
-            core.notice(response.statusText);
-            core.notice(response.ok);
-            core.notice(response.body_text);
-            core.notice(response.body);
 
             if (!response.ok) {
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
@@ -46,10 +40,8 @@ async function run() {
             const issueKey = issue.key;
             const issueSummary = issue.fields.summary || "No summary available";
             const issueStatus = issue.fields.status?.name || "No status available";
-            core.notice("1");
             const issueAuthor = issue.fields.creator?.displayName || "No author available";
             const issueDescription = issue.fields?.issuetype?.description || "No description available";
-            core.notice("2");
             const linkedIssues = issue.fields.issuelinks || [];
 
             const dependencies = linkedIssues.map(linkedIssue => {
@@ -71,6 +63,7 @@ async function run() {
                 description: issueDescription,
                 dependencies: dependencies
             });
+            core.notice(result[0]);
         }
 
         core.setOutput('jira-issues', JSON.stringify(result));
