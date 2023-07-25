@@ -1,5 +1,9 @@
 name: Extract JIRA keys and Get JIRA Info
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
 
 jobs:
   extract_keys:
@@ -28,9 +32,9 @@ jobs:
           jira-email: ${{ secrets.JIRA_EMAIL }}
           jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
         if: steps.jira_keys.outputs.jira-keys != ''
-      - name: Print JIRA issues info
+      - name: Print JIRA info
         run: |
-          echo "JIRA issues info: ${{ steps.jira_info.outputs.issues-info }}"
+          echo "${{ steps.jira_info.outputs.issues-info }}"
         if: steps.jira_keys.outputs.jira-keys != ''
       - name: Append JIRA info to PR description
         run: node ./.github/actions/append-pr-description/index.js
