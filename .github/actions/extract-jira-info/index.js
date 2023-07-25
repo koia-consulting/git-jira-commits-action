@@ -7,17 +7,12 @@ const LEVEL_PARENT = "Parent";
 
 function formatIssueInfo(issue,jiraHost) {
     const issueLink = `<a href="https://${jiraHost}/browse/${issue.key}">${issue.key}</a>`;
-    let authorText = "";
-
-    if(issue.author != ''){
-        authorText = `Author: ${issue.author},`;
-    }
 
     switch (issue.levelType){
         case(LEVEL_PARENT):
-            return `${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
+            return `(${issue.status}) ${issueLink}: ${issue.summary}`;
         case(LEVEL_RELATED):
-    }       return `[${issue.relation}] ${issueLink}: ${issue.summary} (Status: ${issue.status})`;
+    }       return `[${issue.relation}] (${issue.status}) ${issueLink}: ${issue.summary} `;
 
 }
 
