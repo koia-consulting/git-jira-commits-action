@@ -21,12 +21,12 @@ function formatIssueInfo(issue,jiraHost) {
 
 }
 
-function formatIssueList(issues,jiraHost){
+function formatIssueList(issues, jiraHost){
     let issueList = '';
     for (let issue of issues) {
-        issueList += `* ${formatIssueInfo(issue,jiraHost)}\n`;
+        issueList += `* ${formatIssueInfo(issue, jiraHost)}\n`;
         if(issue.dependencies.length > 0){
-            issueList += formatIssueList(issue.dependencies,jiraHost, "");
+            issueList += formatIssueInfo(issue.dependencies, jiraHost);
         }
     }
     return issueList;
@@ -57,7 +57,6 @@ async function run() {
                     'Accept': 'application/json'
                 }
             });
-
 
             if (!response.ok) {
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
