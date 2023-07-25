@@ -4,12 +4,15 @@ const fetch = require('cross-fetch');
 
 const LEVEL_RELATED = "Related";
 const LEVEL_PARENT = "Parent";
+const LEVEL_SUBTASK = "Subtask";
 
 function formatIssueInfo(issue,jiraHost) {
     const issueLink = `<a href="https://${jiraHost}/browse/${issue.key}">${issue.key}</a>`;
 
     switch (issue.levelType){
         case(LEVEL_PARENT):
+            return `(${issue.status}) ${issueLink}: ${issue.summary}`;
+        case(LEVEL_SUBTASK):
             return `(${issue.status}) ${issueLink}: ${issue.summary}`;
         case(LEVEL_RELATED):
     }       return `[${issue.relation}] (${issue.status}) ${issueLink}: ${issue.summary} `;
@@ -20,9 +23,16 @@ function formatIssueList(issues, jiraHost){
     let issueList = '';
     for (let issue of issues) {
         issueList += `* ${formatIssueInfo(issue, jiraHost)}\n`;
+
+        if(issue.subtasks.length > 0){
+            for(let subtask of issue.subtasks){
+                issueList += `  ▪️${formatIssueInfo(subtask, jiraHost)}\n`;
+            }
+        }
+
         if(issue.dependencies.length > 0){
             for(let dependency of issue.dependencies){
-                issueList += `    - ${formatIssueInfo(dependency, jiraHost)}\n`;
+                issueList += `  ▫️${formatIssueInfo(dependency, jiraHost)}\n`;
             }
         }
     }
@@ -69,6 +79,7 @@ async function run() {
             const issueAuthor = issue.fields.creator?.displayName || "No author available";
             const issueDescription = issue.fields?.issuetype?.description || "No description available";
             const linkedIssues = issue.fields.issuelinks || [];
+            const subtasks = issue.fields.subtasks || [];
 
             const dependencies = linkedIssues.map(linkedIssue => {
                 const linkedIssueKey = linkedIssue.outwardIssue?.key || linkedIssue.inwardIssue?.key || "No linked issue key available";
@@ -84,12 +95,25 @@ async function run() {
                 };
             });
 
+            const subtasksIssues = subtasks.map(subtask => {
+                const subtaskKey = subtask.key;
+                const subtaskSummary = subtask.fields.summary || "No summary available";
+                const subtaskStatus = subtask.fields.status?.name || "No status available";
+                return {
+                    key: subtaskKey,
+                    summary: subtaskSummary,
+                    status: subtaskStatus,
+                    levelType: LEVEL_SUBTASK
+                };
+            }
+
             result.push({
                 key: issueKey,
                 summary: issueSummary,
                 status: issueStatus,
                 author: issueAuthor,
                 description: issueDescription,
+                subtasks: subtasksIssues,
                 dependencies: dependencies,
                 levelType: LEVEL_PARENT
             });
