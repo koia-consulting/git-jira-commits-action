@@ -41,7 +41,7 @@ async function run() {
             }
 
             const issue = await response.json();
-            core.notice(json);
+            core.notice(issue);
 
             const issueKey = issue.key;
             const issueSummary = issue.fields.summary || "No summary available";
