@@ -48,7 +48,7 @@ async function run() {
         comment += issuesInfo;
         comment += markerEnd;
 
-        await octokit.pulls.createReview({
+        await octokit.rest.issues.createComment({
             owner: repo.owner,
             repo: repo.repo,
             pull_number: issue_number,
