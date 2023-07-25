@@ -48,7 +48,7 @@ async function run() {
             const issueStatus = issue.fields.status?.name || "No status available";
             core.notice("1");
             const issueAuthor = issue.fields.creator?.displayName || "No author available";
-            const issueDescription = issue.fields.description?.content[0]?.content[0]?.text || "No description available";
+            const issueDescription = issue.fields?.issuetype?.description || "No description available";
             core.notice("2");
             const linkedIssues = issue.fields.issuelinks || [];
 
