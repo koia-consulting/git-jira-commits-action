@@ -19,7 +19,7 @@ async function run() {
         const result = [];
 
         for (let jiraKey of jiraKeys) {
-            const response = await fetch(`${protocol}://${jiraHost}/rest/api/2/issue/${jiraKey}`, {
+            const response = await fetch(`${protocol}://${jiraHost}/rest/api/3/issue/${jiraKey}`, {
                 headers: {
                     'Authorization': `Basic ${Buffer.from(`${jiraEmail}:${jiraToken}`).toString('base64')}`,
                     'Accept': 'application/json'
@@ -27,7 +27,7 @@ async function run() {
             });
 
             if (!response.ok) {
-                core.setFailed(`Failed to fetch issue ${jiraKey}`);
+                core.setFailed(`Failed to fetch issue ${jiraKey}\n` + response.toString());
                 return;
             }
 
