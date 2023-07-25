@@ -1,6 +1,16 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+function removeSpecificText(str, startString, endString) {
+    // This will create a regex pattern like /startString.*?endString/g
+    var regex = new RegExp(startString + '.*?' + endString, 'g');
+
+    // Replace the matches with empty string
+    var result = str.replace(regex, '');
+
+    return result;
+}
+
 async function run() {
     try {
         const token = process.env.GITHUB_TOKEN;
@@ -15,14 +25,17 @@ async function run() {
             pull_number: issue_number
         });
 
-        let body = pullRequest.body;
+        const markerStart = '\n-----\n### JIRA Tickets in PR \n';
+        const markerEnd = '\n-----\n';
+
+        let body = removeSpecificText(pullRequest.body, markerStart, markerEnd);
         if (body === null) {
             body = '';
         }
 
-        body += '\n---\n';
-        body += '### JIRA Tickets in PR\n';
+        body += markerStart;
         body += issuesInfo;
+        body += markerEnd;
 
         await octokit.pulls.update({
             owner: repo.owner,
@@ -34,8 +47,5 @@ async function run() {
         core.setFailed(error.message);
     }
 }
-
-run();
-
 
 run();
