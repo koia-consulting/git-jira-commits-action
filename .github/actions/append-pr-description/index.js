@@ -2,10 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 function removeSpecificText(str, startString, endString) {
-    // This will create a regex pattern like /startString.*?endString/g
     var regex = new RegExp(startString + '.*?' + endString, 'g');
-
-    // Replace the matches with empty string
     var result = str.replace(regex, '');
 
     return result;
@@ -26,7 +23,7 @@ async function run() {
         });
 
         const markerStart = '\n-----\n### JIRA Tickets in PR \n';
-        const markerEnd = '\n-----\n';
+        const markerEnd = '\n--*--*--\n';
 
         let body = pullRequest.body;
         if (body === null) {
