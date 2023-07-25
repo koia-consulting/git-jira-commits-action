@@ -15,15 +15,27 @@ async function run() {
             pull_number: issue_number
         });
 
+        let body = pullRequest.body;
+        if (body === null) {
+            body = '';
+        }
+
+        body += '\n---\n';
+        body += '### JIRA Tickets in PR\n';
+        body += issuesInfo;
+
         await octokit.pulls.update({
             owner: repo.owner,
             repo: repo.repo,
             pull_number: issue_number,
-            body: `${pullRequest.body}\n\n${issuesInfo}`
+            body: body
         });
     } catch (error) {
         core.setFailed(error.message);
     }
 }
+
+run();
+
 
 run();
