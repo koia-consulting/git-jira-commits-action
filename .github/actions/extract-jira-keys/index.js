@@ -1,68 +1,77 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const JiraClient = require('jira-connector');
 
-function extractJiraKeys(text) {
-    const jiraKeyPattern = /\b[A-Z][A-Z0-9]*-[0-9]+\b/g;
-    const result = text.match(jiraKeyPattern);
-    return result || [];
-}
-
-function extractUniqueJiraKeys(keys) {
-    return [...new Set(keys)];
+// Formatter function for Jira issue
+function formatIssue(issue, indent = 0) {
+    const indentation = " ".repeat(indent);
+    return `${indentation}Issue ${issue.key}: ${issue.summary} (Author: ${issue.author}, Status: ${issue.status})`;
 }
 
 async function run() {
     try {
-        const githubToken = core.getInput('github-token', { required: true });
-        const filter = core.getInput('filter', { required: false }) || 'all';
-        const octokit = github.getOctokit(githubToken);
+        const jiraHost = core.getInput('jira-host', { required: false });
+        const jiraToken = core.getInput('jira-token', { required: false });
+        const jiraEmail = core.getInput('jira-email', { required: false });
+        const jiraKeys = core.getInput('jira-keys', { required: true }).split(',');
 
-        const context = github.context;
-
-        const { owner, repo } = context.repo;
-        const { number } = context.issue;
-
-        let prKeys = [];
-        let commitKeys = [];
-        let branchKeys = [];
-
-        let sha;
-        if(context.eventName === 'pull_request') {
-            const { data: pr } = await octokit.rest.pulls.get({
-                owner,
-                repo,
-                pull_number: number,
-            });
-
-            prKeys.push(...extractJiraKeys(pr.title));
-            branchKeys.push(...extractJiraKeys(pr.head.ref));
-
-            sha = pr.head.sha;
-        } else if (context.eventName === 'push') {
-            const branchName = process.env.GITHUB_REF.split('/').pop();
-            branchKeys.push(...extractJiraKeys(branchName));
-
-            sha = context.sha;
+        if (!jiraHost) {
+            core.setFailed("Missing required secret: jira-host");
+            return;
         }
 
-        const { data: commitData } = await octokit.rest.repos.listCommits({
-            owner,
-            repo,
-            sha,
+        if (!jiraToken) {
+            core.setFailed("Missing required secret: jira-token");
+            return;
+        }
+
+        if (!jiraEmail) {
+            core.setFailed("Missing required secret: jira-email");
+            return;
+        }
+
+        const jira = new JiraClient({
+            host: jiraHost,
+            basic_auth: {
+                email: jiraEmail,
+                api_token: jiraToken,
+            },
         });
 
-        commitData.forEach((commit) => {
-            commitKeys.push(...extractJiraKeys(commit.commit.message));
-        });
+        let issuesInfo = "";
 
-        let jiraKeys = [];
-        if (filter === 'all' || filter === 'pr') jiraKeys.push(...prKeys);
-        if (filter === 'all' || filter === 'commit') jiraKeys.push(...commitKeys);
-        if (filter === 'all' || filter === 'branch') jiraKeys.push(...branchKeys);
+        for (const key of jiraKeys) {
+            const { fields } = await jira.issue.getIssue({ issueKey: key.trim() });
 
-        jiraKeys = extractUniqueJiraKeys(jiraKeys);
+            const issue = {
+                key: key.trim(),
+                summary: fields.summary,
+                status: fields.status.name,
+                author: fields.creator.displayName,
+                description: fields.description,
+                dependencies: []
+            };
 
-        core.setOutput('jira-keys', jiraKeys.join(', '));
+            // Fetch details for linked issues
+            for (const link of fields.issuelinks) {
+                const linkedIssueKey = link.outwardIssue ? link.outwardIssue.key : link.inwardIssue.key;
+                const linkedIssue = await jira.issue.getIssue({ issueKey: linkedIssueKey });
+
+                issue.dependencies.push({
+                    key: linkedIssue.key,
+                    summary: linkedIssue.fields.summary,
+                    status: linkedIssue.fields.status.name,
+                    author: linkedIssue.fields.creator.displayName,
+                });
+            }
+
+            // Format issue info
+            issuesInfo += formatIssue(issue) + "\n";
+            for (const dep of issue.dependencies) {
+                issuesInfo += formatIssue(dep, 4) + "\n"; // indent dependent issues by 4 spaces
+            }
+        }
+
+        core.setOutput('issues-info', issuesInfo);
     } catch (error) {
         core.setFailed(error.message);
     }

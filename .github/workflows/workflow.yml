@@ -1,4 +1,4 @@
-name: Extract JIRA keys
+name: Extract JIRA keys and Get JIRA Info
 on: [push, pull_request]
 
 jobs:
@@ -13,12 +13,20 @@ jobs:
           node-version: '14'
       - name: Install dependencies
         run: npm install
-      - name: Run action
+      - name: Run extract-jira-keys action
         id: jira_keys
         uses: ./.github/actions/extract-jira-keys
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           filter: 'all' # Can be 'pr', 'commit', 'branch', or 'all'
-      - name: Print JIRA keys
+      - name: Run extract-jira-info action
+        id: jira_info
+        uses: ./.github/actions/extract-jira-info
+        with:
+          jira-host: ${{ secrets.JIRA_HOST }}
+          jira-token: ${{ secrets.JIRA_TOKEN }}
+          jira-email: ${{ secrets.JIRA_EMAIL }}
+          jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
+      - name: Print JIRA issues info
         run: |
-          echo "JIRA keys: ${{ steps.jira_keys.outputs.jira-keys }}"
+          echo "JIRA issues info: ${{ steps.jira_info.outputs.issues-info }}"

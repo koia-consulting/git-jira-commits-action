@@ -1,0 +1,21 @@
+name: 'Extract JIRA Info'
+description: 'Fetch issue information from JIRA'
+inputs:
+  jira-host:
+    description: 'JIRA host URL'
+    required: true
+  jira-token:
+    description: 'JIRA API token'
+    required: true
+  jira-email:
+    description: 'JIRA account email'
+    required: true
+  jira-keys:
+    description: 'Array of JIRA issue keys'
+    required: true
+outputs:
+  issues-info:
+    description: 'Information of the issues'
+runs:
+  using: 'node12'
+  main: 'index.js'
