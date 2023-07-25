@@ -48,11 +48,12 @@ async function run() {
         comment += issuesInfo;
         comment += markerEnd;
 
+
         await octokit.rest.issues.createComment({
             owner: repo.owner,
-            repo: repo.repo,
-            pull_number: issue_number,
-            body: comment
+            repo: repo,
+            issue_number: issue_number,
+            body: comment,
         });
 
     } catch (error) {
