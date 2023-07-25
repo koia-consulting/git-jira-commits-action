@@ -28,6 +28,8 @@ async function run() {
             issue_number: pullRequest.number,
         });
 
+        core.notice(commentsResponse.data);
+
         for(let comment of commentsResponse.data){
             core.notice(comment);
         }
