@@ -1,0 +1,27 @@
+{
+  "name": "extract-jira-keys",
+  "version": "1.0.0",
+  "description": "A GitHub Action to extract JIRA keys from pull request, commit, and branch names.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koia-consulting/git-jira-commits-action.git"
+  },
+  "keywords": [
+    "github-action",
+    "jira"
+  ],
+  "author": "Your Name <filip@koia.consulting>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/yourrepo/issues"
+  },
+  "homepage": "https://github.com/yourusername/yourrepo#readme",
+  "dependencies": {
+    "@actions/core": "^1.5.0",
+    "@actions/github": "^4.0.0"
+  }
+}

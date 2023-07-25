@@ -1,0 +1,27 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# dotenv environment variables file
+.env
+.env.test
+
+# npm debug logs
+npm-debug.log*
+
+# Package Lock files
+package-lock.json
+yarn.lock
+
+# Optional eslint cache
+.eslintcache
