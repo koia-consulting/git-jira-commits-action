@@ -24,7 +24,16 @@ async function run() {
             }
         }
 
-        // Don't forget to do the same for commit messages and branch name
+        // Extract the JIRA keys from the branch name
+        if (filter === 'all' || filter === 'branch') {
+            const branchName = payload.pull_request?.head?.ref;
+            const foundKeys = branchName?.match(regex);
+            if (foundKeys) {
+                jiraKeys.push(...foundKeys);
+            }
+        }
+
+        // Don't forget to do the same for commit messages
 
         // Convert all JIRA keys to uppercase and remove duplicates
         jiraKeys = [...new Set(jiraKeys.map(key => key.toUpperCase()))];
