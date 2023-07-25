@@ -27,6 +27,8 @@ jobs:
           jira-token: ${{ secrets.JIRA_TOKEN }}
           jira-email: ${{ secrets.JIRA_EMAIL }}
           jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
+        if: steps.jira_keys.outputs.jira-keys != ''
       - name: Print JIRA issues info
         run: |
           echo "JIRA issues info: ${{ steps.jira_info.outputs.issues-info }}"
+        if: steps.jira_keys.outputs.jira-keys != ''
