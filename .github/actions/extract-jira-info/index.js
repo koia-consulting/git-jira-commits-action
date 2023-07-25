@@ -20,13 +20,15 @@ async function run() {
         const result = [];
 
         for (let jiraKey of jiraKeys) {
-            const response = await fetch(`${protocol}://${jiraHost}/rest/api/2/issue/${jiraKey}`, {
+            let url = `${protocol}://${jiraHost}/rest/api/2/issue/${jiraKey}`;
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': `Basic ${Buffer.from(`${jiraEmail}:${jiraToken}`).toString('base64')}`,
                     'Accept': 'application/json'
                 }
             });
 
+            core.notice(url);
             core.notice(response.status);
             core.notice(response.statusText);
             core.notice(response.ok);
