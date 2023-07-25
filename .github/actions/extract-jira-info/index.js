@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const fetch = require('cross-fetch');
 
 function formatIssueInfo(issue,jiraHost) {
-    const issueLink = `<a href=https://${jiraHost}/browse/${issue.key}`>${issue.key}</a>`;
+    const issueLink = `<a href="https://${jiraHost}/browse/${issue.key}">${issue.key}</a>`;
     return `${issueLink}: ${issue.summary} (Author: ${issue.author}, Status: ${issue.status})`;
 }
 
