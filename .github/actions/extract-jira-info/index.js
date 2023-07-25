@@ -27,6 +27,7 @@ async function run() {
         core.setOutput('issues-info', formattedIssues);
 
     } catch (error) {
+        console.log(error);
         core.setFailed(error.message);
     }
 }
