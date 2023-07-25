@@ -34,8 +34,6 @@ async function run() {
             core.notice(response.ok);
             core.notice(response.body_text);
             core.notice(response.body);
-            let json = await response.json();
-
 
             if (!response.ok) {
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
