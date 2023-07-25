@@ -28,9 +28,10 @@ async function run() {
             });
 
             core.notice(response.status);
-            core.notice(response.json());
-            core.notice(response.text);
-            core.notice(response.headers);
+            core.notice(response.statusText);
+            core.notice(response.ok);
+            core.notice(response.headers.toString());
+
             if (!response.ok) {
 
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
