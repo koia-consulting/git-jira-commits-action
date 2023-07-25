@@ -35,8 +35,7 @@ async function run() {
             core.notice(response.body_text);
             core.notice(response.body);
             let json = await response.json();
-            core.notice(json);
-            
+
 
             if (!response.ok) {
                 core.setFailed(`Failed to fetch issue ${jiraKey}\n`);
@@ -44,11 +43,15 @@ async function run() {
             }
 
             const issue = await response.json();
+            core.notice(json);
+
             const issueKey = issue.key;
             const issueSummary = issue.fields.summary || "No summary available";
             const issueStatus = issue.fields.status?.name || "No status available";
+            core.notice("1");
             const issueAuthor = issue.fields.creator?.displayName || "No author available";
             const issueDescription = issue.fields.description?.content[0]?.content[0]?.text || "No description available";
+            core.notice("2");
             const linkedIssues = issue.fields.issuelinks || [];
 
             const dependencies = linkedIssues.map(linkedIssue => {
