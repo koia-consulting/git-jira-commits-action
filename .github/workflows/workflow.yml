@@ -32,3 +32,9 @@ jobs:
         run: |
           echo "JIRA issues info: ${{ steps.jira_info.outputs.issues-info }}"
         if: steps.jira_keys.outputs.jira-keys != ''
+      - name: Append JIRA info to PR description
+        run: node ./.github/actions/append-pr-description/index.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES_INFO: ${{ steps.jira_info.outputs.issues-info }}
+        if: github.event_name == 'pull_request' && steps.jira_keys.outputs.jira-keys != ''

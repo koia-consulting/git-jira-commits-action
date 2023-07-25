@@ -1,0 +1,5 @@
+name: 'Append JIRA info to PR Description'
+description: 'Appends extracted JIRA info to the PR description'
+runs:
+  using: 'node12'
+  main: 'index.js'
