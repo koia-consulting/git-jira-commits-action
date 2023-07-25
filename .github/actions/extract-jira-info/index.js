@@ -27,7 +27,6 @@ async function run() {
         core.setOutput('issues-info', formattedIssues);
 
     } catch (error) {
-        console.log(error);
         core.setFailed(error.message);
     }
 }
@@ -39,6 +38,8 @@ function formatIssueInfo(issue) {
 
 function formatIssues(issues) {
     let result = '';
+    core.setFailed(issues);
+    return;
 
     issues.forEach(issue => {
         result += `- ${formatIssueInfo(issue)}\n`;
