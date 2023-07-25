@@ -25,14 +25,16 @@ function formatIssueList(issues, jiraHost){
         issueList += `* ${formatIssueInfo(issue, jiraHost)}\n`;
 
         if(issue.subtasks.length > 0){
+            issueList += `\n  Subtasks:\n`;
             for(let subtask of issue.subtasks){
-                issueList += `  ▪️${formatIssueInfo(subtask, jiraHost)}\n`;
+                issueList += `  - ${formatIssueInfo(subtask, jiraHost)}\n`;
             }
         }
 
         if(issue.dependencies.length > 0){
+            issueList += `\n  Links & Dependencies:\n`;
             for(let dependency of issue.dependencies){
-                issueList += `  ▫️${formatIssueInfo(dependency, jiraHost)}\n`;
+                issueList += `  - ${formatIssueInfo(dependency, jiraHost)}\n`;
             }
         }
     }

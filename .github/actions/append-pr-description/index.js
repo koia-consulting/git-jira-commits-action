@@ -22,8 +22,8 @@ async function run() {
             pull_number: issue_number
         });
 
-        const markerStart = '\n-----\n### JIRA Tickets in PR \n';
-        const markerEnd = '\n--*--*--\n';
+        const markerStart = '### JIRA Tickets in PR \n';
+        const markerEnd = '\n';
 
         // let body = pullRequest.body;
         // if (body === null) {
