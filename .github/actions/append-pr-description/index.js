@@ -28,9 +28,12 @@ async function run() {
         const markerStart = '\n-----\n### JIRA Tickets in PR \n';
         const markerEnd = '\n-----\n';
 
-        let body = removeSpecificText(pullRequest.body, markerStart, markerEnd);
+        let body = pullRequest.body;
         if (body === null) {
             body = '';
+        }
+        else {
+            body += removeSpecificText(pullRequest.body, markerStart, markerEnd);
         }
 
         body += markerStart;
