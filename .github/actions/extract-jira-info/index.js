@@ -17,7 +17,7 @@ function formatIssueInfo(issue,jiraHost) {
         case(LEVEL_PARENT):
             return `${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
         case(LEVEL_RELATED):
-    }       return `    >> ${issueLink}: ${issue.summary} (${authorText} Status: ${issue.status})`;
+    }       return `    - [${relation}] ${issueLink}: ${issue.summary} (Status: ${issue.status})`;
 
 }
 
@@ -26,7 +26,9 @@ function formatIssueList(issues, jiraHost){
     for (let issue of issues) {
         issueList += `* ${formatIssueInfo(issue, jiraHost)}\n`;
         if(issue.dependencies.length > 0){
-            issueList += formatIssueInfo(issue.dependencies, jiraHost);
+            for(let dependency of issue.dependencies){
+                issueList += `    - ${formatIssueInfo(dependency, jiraHost)}\n`;
+            }
         }
     }
     return issueList;
