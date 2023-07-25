@@ -20,5 +20,5 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           filter: 'all' # Can be 'pr', 'commit', 'branch', or 'all'
       - name: Print JIRA keys
-          run:
-            echo "JIRA keys: ${{ steps.jira_keys.outputs.jira-keys }}"
+        run: |
+          echo "JIRA keys: ${{ steps.jira_keys.outputs.jira-keys }}"
