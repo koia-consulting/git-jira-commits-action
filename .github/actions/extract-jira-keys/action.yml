@@ -1,16 +1,15 @@
-name: 'Extract JIRA keys'
-description: 'Extract JIRA keys from commit messages, PR title, and branch names'
+name: 'Extract JIRA Keys'
+description: 'Extract JIRA issue keys from branch names, commit messages, and PR titles'
 inputs:
   github-token:
     description: 'GitHub token'
     required: true
   filter:
-    description: 'Filter keys by where they were found (pr, commit, branch, all)'
-    required: false
-    default: 'all'
+    description: 'Where to extract keys from (pr, commit, branch, all)'
+    required: true
 outputs:
   jira-keys:
-    description: 'List of unique JIRA keys'
+    description: 'Array of unique JIRA issue keys'
 runs:
   using: 'node12'
   main: 'index.js'
