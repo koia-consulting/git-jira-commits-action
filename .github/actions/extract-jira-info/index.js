@@ -105,7 +105,7 @@ async function run() {
                     status: subtaskStatus,
                     levelType: LEVEL_SUBTASK
                 };
-            }
+            });
 
             result.push({
                 key: issueKey,
