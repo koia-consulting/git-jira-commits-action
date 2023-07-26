@@ -39,6 +39,7 @@ async function run() {
         jiraKeys = [...new Set(jiraKeys.map(key => key.toUpperCase()))];
 
         // Set the output
+        core.notice(`Found JIRA keys: ${jiraKeys.join(', ')}`);
         core.setOutput('jira-keys', jiraKeys.join(','));
     } catch (error) {
         core.setFailed(error.message);
