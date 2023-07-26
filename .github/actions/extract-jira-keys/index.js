@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { GitHub } = require('@actions/github/lib/utils');
 
 async function run() {
     try {
@@ -9,13 +10,13 @@ async function run() {
 
         // Get the payload from the GitHub event
         const { payload } = github.context;
+        const octokit = GitHub.getOctokit(token);
 
         // Extract the JIRA keys from the PR/commit/branch based on the filter value
         let jiraKeys = [];
         const regex = /(?<=\/|\b)[a-z0-9]{1,10}-\d+\b/gi;
 
-        // Add checks and extraction logic for PR title, commit messages, and branch name
-        // This is an example for PR title:
+        // Extract JIRA keys from PR title
         if (filter === 'all' || filter === 'pr') {
             const prTitle = payload.pull_request?.title;
             const foundKeys = prTitle?.match(regex);
@@ -33,7 +34,21 @@ async function run() {
             }
         }
 
-        // Don't forget to do the same for commit messages
+        // Extract JIRA keys from commit messages
+        if (filter === 'all' || filter === 'commit') {
+            const commits = await octokit.pulls.listCommits({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: payload.pull_request.number,
+            });
+
+            for (const commit of commits.data) {
+                const foundKeys = commit.commit.message.match(regex);
+                if (foundKeys) {
+                    jiraKeys.push(...foundKeys);
+                }
+            }
+        }
 
         // Convert all JIRA keys to uppercase and remove duplicates
         jiraKeys = [...new Set(jiraKeys.map(key => key.toUpperCase()))];
