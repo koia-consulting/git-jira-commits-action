@@ -11,7 +11,7 @@ function formatIssueInfo(issue,jiraHost) {
 
     switch (issue.levelType){
         case(LEVEL_PARENT):
-            return `*(${issue.status}) ${issueLink}: ${issue.summary}*`;
+            return `**(${issue.status}) ${issueLink}: ${issue.summary}**`;
         case(LEVEL_SUBTASK):
             return `(${issue.status}) ${issueLink}: ${issue.summary}`;
         case(LEVEL_RELATED):
