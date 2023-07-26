@@ -17,7 +17,10 @@ function getReportBody(descriptionBody, issuesInfo) {
         body = '';
     }
     else {
-        body += removeText(issuesInfo, SECTION_START, SECTION_END);
+        let regex = new RegExp(`${SECTION_START}([\\s\\S]*?)${SECTION_END}`, 'g');
+
+        let newText = text.replace(regex, '');
+        body = newText;
     }
 
     body += SECTION_START;
