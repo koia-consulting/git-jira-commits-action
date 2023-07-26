@@ -18,7 +18,9 @@ function getReportBody(descriptionBody, issuesInfo) {
     }
     else {
         let regex = new RegExp(`${SECTION_START}([\\s\\S]*?)${SECTION_END}`, 'g');
+        core.notice(`regex: ${regex}`);
         body = descriptionBody.replace(regex, '');
+        core.notice(`filtered body: ${body}`);
     }
 
     body += SECTION_START;
