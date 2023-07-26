@@ -17,7 +17,7 @@ function getReportBody(issuesInfo) {
         body = '';
     }
     else {
-        body += removeSpecificText(issuesInfo, SECTION_START, SECTION_END);
+        body += removeText(issuesInfo, SECTION_START, SECTION_END);
     }
 
     body += SECTION_START;
