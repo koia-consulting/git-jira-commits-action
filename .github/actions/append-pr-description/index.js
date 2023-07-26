@@ -17,12 +17,12 @@ function getReportBody(issuesInfo) {
         body = '';
     }
     else {
-        body += removeSpecificText(issuesInfo, markerStart, markerEnd);
+        body += removeSpecificText(issuesInfo, SECTION_START, SECTION_END);
     }
 
-    body += markerStart;
+    body += SECTION_START;
     body += issuesInfo;
-    body += markerEnd;
+    body += SECTION_END;
     return body;
 }
 
