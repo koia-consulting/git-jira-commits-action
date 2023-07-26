@@ -23,9 +23,11 @@ function getReportBody(descriptionBody, issuesInfo) {
         body = newText;
     }
 
+    core.notice(`Appending JIRA issues: ${newText}\n`)
     body += SECTION_START;
     body += issuesInfo;
     body += SECTION_END;
+    core.notice(`Appending JIRA issues: ${body}\n`)
     return body;
 }
 
@@ -53,7 +55,7 @@ async function run() {
             repo: repo.repo,
             pull_number: issue_number
         });
-
+        core.notice("Issue info: " + issuesInfo);
         const report = getReportBody(pullRequest.body, issuesInfo);
         await appendDescriptionToPR(report, octokit, repo, issue_number)
 
