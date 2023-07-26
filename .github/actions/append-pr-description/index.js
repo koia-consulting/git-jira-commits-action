@@ -19,7 +19,7 @@ function getReportBody(descriptionBody, issuesInfo) {
     else {
         let regex = new RegExp(`${SECTION_START}([\\s\\S]*?)${SECTION_END}`, 'g');
 
-        let newText = text.replace(regex, '');
+        let newText = descriptionBody.replace(regex, '');
         body = newText;
     }
 
@@ -55,7 +55,6 @@ async function run() {
             repo: repo.repo,
             pull_number: issue_number
         });
-        core.notice("Issue info: " + issuesInfo);
         const report = getReportBody(pullRequest.body, issuesInfo);
         await appendDescriptionToPR(report, octokit, repo, issue_number)
 
