@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { GitHub } = require('@actions/github/lib/utils');
 
 async function run() {
     try {
@@ -10,7 +9,7 @@ async function run() {
 
         // Get the payload from the GitHub event
         const { payload } = github.context;
-        const octokit = GitHub.getOctokit(token);
+        const octokit = github.getOctokit(token);
 
         // Extract the JIRA keys from the PR/commit/branch based on the filter value
         let jiraKeys = [];
