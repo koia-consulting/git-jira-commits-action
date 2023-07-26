@@ -18,16 +18,12 @@ function getReportBody(descriptionBody, issuesInfo) {
     }
     else {
         let regex = new RegExp(`${SECTION_START}([\\s\\S]*?)${SECTION_END}`, 'g');
-
-        let newText = descriptionBody.replace(regex, '');
-        body = newText;
+        body = descriptionBody.replace(regex, '');
     }
 
-    core.notice(`Appending JIRA issues: ${newText}\n`)
     body += SECTION_START;
     body += issuesInfo;
     body += SECTION_END;
-    core.notice(`Appending JIRA issues: ${body}\n`)
     return body;
 }
 
